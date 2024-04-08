@@ -1,65 +1,60 @@
-import { useContext, useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Link } from "react-router-dom";
-import Swal from "sweetalert2";
-import { CustomerContext } from "../context/CustomerContext";
-
-type Customer = {
-    id: number,
-    name: string,
-    lastname: string,
-    address: string,
-    phone: string
-}
+import { ICustomer } from "../context/customer/ICustomer";
+import { useCustomerContext } from "../hooks/useCustomerContext";
 
 export const CustomerPage = () => {
     
-    // const [customers, setCustomers] = useState<Customer[] | []>([]);
+    const { customers, setCustomerDetail, getAllCustomers } = useCustomerContext();
 
-    const { customers, customerDetail, getAllCustomers, getCustomerDetail } = useContext(CustomerContext);
+    const handleDelete = () : void => {
+        // Swal.fire({
+        //     title: "Are you sure you want delete this customer?",
+        //     text: "You won't be able to revert this!",
+        //     icon: "warning",
+        //     showCancelButton: true,
+        //     confirmButtonColor: "#3085d6",
+        //     cancelButtonColor: "#d33",
+        //     confirmButtonText: "Yes, delete it!"
+        // }).then((result) => {
 
-    const handleDelete = (customer:Customer) : void => {
-        Swal.fire({
-            title: "Are you sure you want delete this customer?",
-            text: "You won't be able to revert this!",
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#3085d6",
-            cancelButtonColor: "#d33",
-            confirmButtonText: "Yes, delete it!"
-        }).then((result) => {
+        //     //DELETE CUSTOMER
 
-            //DELETE CUSTOMER
+        //     if (result.isConfirmed) {
+        //         Swal.fire({
+        //             title: "Deleted!",
+        //             text: "Your file has been deleted.",
+        //             icon: "success"
+        //         });
+        //     }
+        // });
+    };
 
-            if (result.isConfirmed) {
-                Swal.fire({
-                    title: "Deleted!",
-                    text: "Your file has been deleted.",
-                    icon: "success"
-                });
-            }
+    const handleAdd = () : void => {
+        setCustomerDetail({
+            name: "",
+            lastname: "",
+            address: "",
+            phone: ""
         });
     };
 
-    
-    // const getCustomers = async() => {
-    //     const response = await makersSolutionsAPI.get<Customer[]>('/customer');
-    //     const customerList = response.data;
-    //     setCustomers(customerList);
-    // };
+    const handleEdit = (customer:ICustomer) => {
+        setCustomerDetail({...customer});
+        console.log(customer)
+    };
+
     useEffect(() => {
         getAllCustomers();
-        getCustomerDetail(2);
-    }, [customers]);
+    }, []);
     
-    // console.log(customerDetail)
-
     return (
         <>
             <div className="container">
                 <div className="d-flex justify-content-between">
                     <h2>Customers</h2>
                     
-                    <Link to="/customer/add" className="btn btn-success mb-2">
+                    <Link to="/customer/add" className="btn btn-success mb-2" onClick={handleAdd}>
                         <i className="bi bi-person-plus-fill me-1"></i>
                         Add Customer
                     </Link>
@@ -77,7 +72,7 @@ export const CustomerPage = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {customers.map(entity => (
+                        {customers.map((entity:ICustomer) => (
                             <tr key={entity.id}>
                                 <td>{entity.id}</td>
                                 <td>{entity.name}</td>
@@ -85,11 +80,11 @@ export const CustomerPage = () => {
                                 <td>{entity.address}</td>
                                 <td>{entity.phone}</td>
                                 <td>
-                                    <Link to={`/customer/${entity.id}`} className="btn btn-warning me-2">
+                                    <Link to={`/customer/${entity.id}`} onClick={() => handleEdit(entity)} className="btn btn-warning me-2">
                                         <i className="bi bi-pencil-square me-1"></i>
                                         Edit
                                     </Link>
-                                    <button className="btn btn-danger" onClick={() => handleDelete(entity)}>
+                                    <button className="btn btn-danger" onClick={() => handleDelete()}>
                                         <i className="bi bi-trash2-fill me-1"></i>
                                         Delete
                                     </button>

@@ -7,7 +7,7 @@ import ErrorPage from './pages/ErrorPage'
 import { CustomerPage } from './pages/CustomerPage'
 import { InvoicePage } from './pages/InvoicePage'
 import { CustomerView } from './views/CustomerView'
-import { CustomerProvider } from './constants/CustomerProvider'
+import { CustomerProvider } from './context/customer/CustomerContext'
 
 const router = createBrowserRouter([
   {

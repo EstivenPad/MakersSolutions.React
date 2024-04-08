@@ -1,10 +1,16 @@
-import { FC, ReactNode, useState } from "react"
+import { useState } from "react"
 import { ICustomer } from "./ICustomer";
-import { makersSolutionsAPI } from "../api/makersSolutionAPI";
-import { CustomerContext } from "../context/CustomerContext";
+import { makersSolutionsAPI } from "../../api/makersSolutionAPI";
+import { createContext } from "react";
 import { ICustomerContext } from "./ICustomerContext";
 
-export const CustomerProvider:FC<ReactNode> = ({children}) => {
+interface CustomerContextProviderProps {
+    children: React.ReactNode;
+}
+
+export const CustomerContext = createContext<ICustomerContext | null>(null);
+
+export const CustomerProvider = ({children}:CustomerContextProviderProps) => {
     
     const [customers, setCustomers] = useState<ICustomer[] | []>([]);
     const [customerDetail, setCustomerDetail] = useState<ICustomer | null>(null);
@@ -26,8 +32,9 @@ export const CustomerProvider:FC<ReactNode> = ({children}) => {
     const contextValue: ICustomerContext = {
         customers,
         customerDetail,
+        setCustomerDetail,
         getAllCustomers,
-        getCustomerDetail
+        getCustomerDetail,
     }
 
     return (

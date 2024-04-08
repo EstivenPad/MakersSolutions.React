@@ -1,24 +1,23 @@
 import { SubmitHandler, useForm } from "react-hook-form"
 import { phonePattern } from "../constants/phoneTemplate";
-
-type CustomerInputs = {
-    name: string,
-    lastname: string,
-    address: string,
-    phone: string
-}
+import { ICustomer } from "../context/customer/ICustomer";
+import { useCustomerContext } from "../hooks/useCustomerContext";
 
 export const CustomerView = () => {
     
-    // const [customerForm, setCustomerForm] = useState(customerFormState);
-
+    const { customerDetail } = useCustomerContext();
+    
     const {
         register,
         handleSubmit,
         formState: { errors }
-    } = useForm<CustomerInputs>();
+    } = useForm<ICustomer>({defaultValues: {...customerDetail}});
 
-    const onSubmit:SubmitHandler<CustomerInputs> = (data) => console.log(data)
+    const onSubmit:SubmitHandler<ICustomer> = (data) => {
+        
+        console.log(data);
+
+    };
 
     return (
         <div className="container">
