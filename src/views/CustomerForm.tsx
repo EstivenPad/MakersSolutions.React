@@ -2,21 +2,41 @@ import { SubmitHandler, useForm } from "react-hook-form"
 import { phonePattern } from "../constants/phoneTemplate";
 import { ICustomer } from "../context/customer/ICustomer";
 import { useCustomerContext } from "../hooks/useCustomerContext";
+import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
 
 export const CustomerView = () => {
     
-    const { customerDetail } = useCustomerContext();
+    const { customerDetail, addNewCustomer, updateCustomer } = useCustomerContext();
     
+    const navigate = useNavigate()
+
     const {
         register,
         handleSubmit,
+        reset,
         formState: { errors }
-    } = useForm<ICustomer>({defaultValues: {...customerDetail}});
+    } = useForm<ICustomer>({
+        defaultValues: { ...customerDetail }
+    });
 
     const onSubmit:SubmitHandler<ICustomer> = (data) => {
+        if(!data.id)
+            addNewCustomer(data);
+        else
+            updateCustomer(data);
         
-        console.log(data);
+        Swal.fire({
+            title: "Success!",
+            text: `Your customer has been ${data.id ? "updated" : "added"} successfully.`,
+            icon: "success"
+        });
 
+        navigate(-1);
+    };
+
+    const clearFields = () => {
+        reset({...customerDetail});
     };
 
     return (
@@ -61,13 +81,13 @@ export const CustomerView = () => {
                     {errors.phone && <div className="alert alert-danger mt-2">{errors.phone.message}</div>}
                 </div>
 
-                <div className="d-flex justify-content-center">
+                <div className="d-flex justify-content-center mb-5">
                     <button type="submit" className="btn btn-success me-2">
                         <i className="bi bi-floppy2-fill me-2"></i>
                         Save
                     </button>
 
-                    <button className="btn btn-secondary me-2" onClick={() => {}}>
+                    <button className="btn btn-secondary me-2" onClick={clearFields}>
                         <i className="bi bi-eraser-fill me-2"></i>
                         Clean
                     </button>

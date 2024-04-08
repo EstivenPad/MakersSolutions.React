@@ -2,33 +2,11 @@ import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { ICustomer } from "../context/customer/ICustomer";
 import { useCustomerContext } from "../hooks/useCustomerContext";
+import Swal from "sweetalert2";
 
 export const CustomerPage = () => {
     
-    const { customers, setCustomerDetail, getAllCustomers } = useCustomerContext();
-
-    const handleDelete = () : void => {
-        // Swal.fire({
-        //     title: "Are you sure you want delete this customer?",
-        //     text: "You won't be able to revert this!",
-        //     icon: "warning",
-        //     showCancelButton: true,
-        //     confirmButtonColor: "#3085d6",
-        //     cancelButtonColor: "#d33",
-        //     confirmButtonText: "Yes, delete it!"
-        // }).then((result) => {
-
-        //     //DELETE CUSTOMER
-
-        //     if (result.isConfirmed) {
-        //         Swal.fire({
-        //             title: "Deleted!",
-        //             text: "Your file has been deleted.",
-        //             icon: "success"
-        //         });
-        //     }
-        // });
-    };
+    const { customers, setCustomerDetail, getAllCustomers, deleteCustomer } = useCustomerContext();
 
     const handleAdd = () : void => {
         setCustomerDetail({
@@ -39,9 +17,30 @@ export const CustomerPage = () => {
         });
     };
 
-    const handleEdit = (customer:ICustomer) => {
+    const handleEdit = (customer: ICustomer) => {
         setCustomerDetail({...customer});
-        console.log(customer)
+    };
+
+    const handleDelete = (customerId: number = 0) : void => {
+        Swal.fire({
+            title: "Are you sure you want delete this customer?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, delete it!"
+        }).then(async(result) => {
+            if (result.isConfirmed) {
+                deleteCustomer(customerId);
+                
+                Swal.fire({
+                    title: "Success!",
+                    text: "Your customer has been deleted successfully.",
+                    icon: "success"
+                });
+            }
+        });
     };
 
     useEffect(() => {
@@ -54,7 +53,7 @@ export const CustomerPage = () => {
                 <div className="d-flex justify-content-between">
                     <h2>Customers</h2>
                     
-                    <Link to="/customer/add" className="btn btn-success mb-2" onClick={handleAdd}>
+                    <Link to="/customer/form" className="btn btn-success mb-2" onClick={handleAdd}>
                         <i className="bi bi-person-plus-fill me-1"></i>
                         Add Customer
                     </Link>
@@ -67,7 +66,7 @@ export const CustomerPage = () => {
                             <th>Name</th>
                             <th>Lastname</th>
                             <th>Address</th>
-                            <th>Phone</th>
+                            <th>Phone Number</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -84,7 +83,7 @@ export const CustomerPage = () => {
                                         <i className="bi bi-pencil-square me-1"></i>
                                         Edit
                                     </Link>
-                                    <button className="btn btn-danger" onClick={() => handleDelete()}>
+                                    <button className="btn btn-danger" onClick={() => handleDelete(entity.id)}>
                                         <i className="bi bi-trash2-fill me-1"></i>
                                         Delete
                                     </button>

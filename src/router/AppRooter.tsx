@@ -3,7 +3,7 @@ import { Link, Outlet } from "react-router-dom";
 export default function AppRoot() {
     return (
         <>
-            <div className="d-flex flex-column gap-4">
+            <div className="d-flex flex-column gap-4 ">
                 <h1 className="align-self-center">Makers Solutions</h1>
                 
                 <ul className="d-flex justify-content-center gap-4" style={{listStyle: 'none'}}>
@@ -25,7 +25,7 @@ export default function AppRoot() {
                     </li>
                 </ul>
             </div>
-            
+
             <Outlet/>
         </>
     );
