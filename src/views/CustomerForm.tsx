@@ -14,7 +14,6 @@ export const CustomerView = () => {
     const {
         register,
         handleSubmit,
-        reset,
         formState: { errors }
     } = useForm<ICustomer>({
         defaultValues: { ...customerDetail }
@@ -33,10 +32,6 @@ export const CustomerView = () => {
         });
 
         navigate(-1);
-    };
-
-    const clearFields = () => {
-        reset({...customerDetail});
     };
 
     return (
@@ -82,14 +77,9 @@ export const CustomerView = () => {
                 </div>
 
                 <div className="d-flex justify-content-center mb-5">
-                    <button type="submit" className="btn btn-success me-2">
+                    <button type="submit" className="btn btn-success me-2 w-25">
                         <i className="bi bi-floppy2-fill me-2"></i>
                         Save
-                    </button>
-
-                    <button className="btn btn-secondary me-2" onClick={clearFields}>
-                        <i className="bi bi-eraser-fill me-2"></i>
-                        Clean
                     </button>
                 </div>
             </form>

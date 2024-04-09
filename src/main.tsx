@@ -8,6 +8,8 @@ import { CustomerPage } from './pages/CustomerPage'
 import { InvoicePage } from './pages/InvoicePage'
 import { CustomerView } from './views/CustomerForm'
 import { CustomerProvider } from './context/customer/CustomerContext'
+import { InvoiceProvider } from './context/invoice/InvoiceContext'
+import { InvoiceView } from './views/InvoiceForm'
 
 const router = createBrowserRouter([
     {
@@ -20,13 +22,16 @@ const router = createBrowserRouter([
                 element: <CustomerPage />
             },
             {
+                path: "/customer/*",
+                element: <CustomerView />  
+            },
+            {
                 path: "/invoice",
                 element: <InvoicePage />
             },
-            
             {
-                path: "/customer/*",
-                element: <CustomerView />  
+                path: "/invoice/*",
+                element: <InvoiceView />  
             }
         ]
     },
@@ -35,7 +40,9 @@ const router = createBrowserRouter([
 ReactDOM.createRoot(document.getElementById('root')!).render(
     <React.StrictMode>
         <CustomerProvider>
-            <RouterProvider router={router}/>
+            <InvoiceProvider>
+                <RouterProvider router={router}/>
+            </InvoiceProvider>
         </CustomerProvider>
     </React.StrictMode>,
 )

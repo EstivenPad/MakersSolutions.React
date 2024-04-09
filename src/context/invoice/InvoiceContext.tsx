@@ -1,27 +1,27 @@
 import { useState } from "react"
-import { ICustomer } from "./ICustomer";
+import { IInvoice } from "./IInvoice";
 import { makersSolutionsAPI } from "../../api/makersSolutionAPI";
 import { createContext } from "react";
-import { ICustomerContext } from "./ICustomerContext";
+import { IInvoiceContext } from "./IInvoiceContext";
 import Swal from "sweetalert2";
 import axios from "axios";
 
-interface CustomerContextProviderProps {
+interface InvoiceContextProviderProps {
     children: React.ReactNode;
 }
 
-export const CustomerContext = createContext<ICustomerContext | null>(null);
+export const InvoiceContext = createContext<IInvoiceContext | null>(null);
 
-export const CustomerProvider = ({children}:CustomerContextProviderProps) => {
+export const InvoiceProvider = ({children}:InvoiceContextProviderProps) => {
     
-    const [customers, setCustomers] = useState<ICustomer[] | []>([]);
-    const [customerDetail, setCustomerDetail] = useState<ICustomer | null>(null);
+    const [invoices, setInvoices] = useState<IInvoice[] | []>([]);
+    const [invoiceDetail, setInvoiceDetail] = useState<IInvoice | null>(null);
 
-    const getAllCustomers = async() => {
+    const getAllInvoices = async() => {
         try {
-            const {data} = await makersSolutionsAPI.get<ICustomer[]>('/customer');
-
-            setCustomers(data);
+            const {data} = await makersSolutionsAPI.get<IInvoice[]>('/invoice');
+            
+            setInvoices(data);
         } catch (error) {
             if (axios.isAxiosError(error)) {
                 Swal.fire({
@@ -35,11 +35,11 @@ export const CustomerProvider = ({children}:CustomerContextProviderProps) => {
         }
     };
 
-    const getCustomerDetail = async(customerId: number) => {
+    const getInvoiceDetail = async(invoiceId: number) => {
         try {
-            const {data} = await makersSolutionsAPI.get<ICustomer>(`/customer/${customerId}`);
+            const {data} = await makersSolutionsAPI.get<IInvoice>(`/invoice/${invoiceId}`);
     
-            setCustomerDetail(data);
+            setInvoiceDetail(data);
         } catch (error) {
             if (axios.isAxiosError(error)) {
                 Swal.fire({
@@ -53,11 +53,18 @@ export const CustomerProvider = ({children}:CustomerContextProviderProps) => {
         }
     };
 
-    const addNewCustomer = async(customer: ICustomer) => {
+    const addNewInvoice = async(invoice: IInvoice) => {
         try {
-            const {data} = await makersSolutionsAPI.post('/customer', customer);
+            const invoiceDate = new Date(invoice.invoiceDate);
+            const {data} = await makersSolutionsAPI.post('/invoice', {...invoice, invoiceDate});
             
-            setCustomers([{id: data.id, ...customer}, ...customers]);
+            setInvoices([{id: data.id, ...invoice}, ...invoices]);
+            
+            Swal.fire({
+                title: "Success!",
+                text: `Your invoice has been ${data.id ? "updated" : "added"} successfully.`,
+                icon: "success"
+            });
         } catch (error) {
             if (axios.isAxiosError(error)) {
                 Swal.fire({
@@ -71,18 +78,18 @@ export const CustomerProvider = ({children}:CustomerContextProviderProps) => {
         }
     };
 
-    const updateCustomer = async(customerToUpdate: ICustomer) => {
+    const updateInvoice = async(invoiceToUpdate: IInvoice) => {
         try {
-            await makersSolutionsAPI.put('/customer/', customerToUpdate);
+            await makersSolutionsAPI.put('/invoice/', invoiceToUpdate);
             
-            const newCustomerArray = customers.map(customer => {
-                if(customer.id !== customerToUpdate.id)
-                    return customer;
+            const newInvoiceArray = invoices.map(invoice => {
+                if(invoice.id !== invoiceToUpdate.id)
+                    return invoice;
 
-                return customerToUpdate;
+                return invoiceToUpdate;
             });
 
-            setCustomers(newCustomerArray);
+            setInvoices(newInvoiceArray);
         } catch (error) {
             if (axios.isAxiosError(error)) {
                 Swal.fire({
@@ -96,13 +103,13 @@ export const CustomerProvider = ({children}:CustomerContextProviderProps) => {
         }
     };
 
-    const deleteCustomer = async(customerId: number) => {
+    const deleteInvoice = async(invoiceId: number) => {
         try {
-            await makersSolutionsAPI.delete(`/customer/${customerId}`)
+            await makersSolutionsAPI.delete(`/invoice/${invoiceId}`)
             
-            const newCustomerArray = customers.filter(customer => customer.id !== customerId);
+            const newInvoiceArray = invoices.filter(invoice => invoice.id !== invoiceId);
 
-            setCustomers(newCustomerArray);
+            setInvoices(newInvoiceArray);
         } catch (error) {
             if (axios.isAxiosError(error)) {
                 Swal.fire({
@@ -116,20 +123,20 @@ export const CustomerProvider = ({children}:CustomerContextProviderProps) => {
         }
     };
 
-    const contextValue: ICustomerContext = {
-        customers,
-        customerDetail,
-        setCustomerDetail,
-        getAllCustomers,
-        getCustomerDetail,
-        addNewCustomer,
-        updateCustomer,
-        deleteCustomer
+    const contextValue: IInvoiceContext = {
+        invoices,
+        invoiceDetail,
+        setInvoiceDetail,
+        getAllInvoices,
+        getInvoiceDetail,
+        addNewInvoice,
+        updateInvoice,
+        deleteInvoice
     }
 
     return (
-        <CustomerContext.Provider value={contextValue}>
+        <InvoiceContext.Provider value={contextValue}>
             {children}
-        </CustomerContext.Provider>
+        </InvoiceContext.Provider>
     )
 }
