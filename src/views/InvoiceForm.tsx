@@ -46,7 +46,7 @@ export const InvoiceView = () => {
                     <label className="">Customer</label>
                     <div className="mb-3 row">
                         <div className="col-auto">
-                            <label className="form-control-plaintext">{(invoiceDetail?.id === undefined) ? 'Customer Name' : customerDetail?.name}</label>
+                            <label className="form-control-plaintext">{(customerDetail?.id === undefined) ? 'Customer Name' : customerDetail?.name}</label>
                         </div>
                         <div className="col-auto">
                             <input type="number" value={searchId} className="form-control" placeholder="Customer ID" onChange={(e) => setSearchId(e.target.value)}/>

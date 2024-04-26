@@ -22,7 +22,7 @@ export const InvoicePage = () => {
 
     const handleEdit = (invoice: IInvoice) => {
         getCustomerDetail(invoice.customerId);
-        setInvoiceDetail({...invoice});
+        setInvoiceDetail({ ...invoice, invoiceDate: new Date(invoice.invoiceDate).toISOString().substring(0, 10) });
     };
 
     const handleDelete = (invoiceId: number = 0) : void => {
@@ -79,7 +79,7 @@ export const InvoicePage = () => {
                         {invoices.map((entity:IInvoice, index) => (
                             <tr key={index}>
                                 <td>{entity.id}</td>
-                                <td>{entity.invoiceDate.toString()}</td>
+                                <td>{entity.invoiceDate.toString().substring(0, 10)}</td>
                                 <td>{entity.createdBy}</td>
                                 <td>{entity.concept}</td>
                                 <td>{entity.total}</td>

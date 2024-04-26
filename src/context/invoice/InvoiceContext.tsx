@@ -80,7 +80,7 @@ export const InvoiceProvider = ({children}:InvoiceContextProviderProps) => {
 
     const updateInvoice = async(invoiceToUpdate: IInvoice) => {
         try {
-            await makersSolutionsAPI.put('/invoice/', invoiceToUpdate);
+            await makersSolutionsAPI.put('/invoice', invoiceToUpdate);
             
             const newInvoiceArray = invoices.map(invoice => {
                 if(invoice.id !== invoiceToUpdate.id)

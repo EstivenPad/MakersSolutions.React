@@ -1,6 +1,6 @@
 export interface IInvoice {
     id?: number,
-    invoiceDate: string,
+    invoiceDate: Date | string,
     createdBy: string,
     concept: string,
     total: number,
